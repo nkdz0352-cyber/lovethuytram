@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gửi beiu 💌</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+  :root{
+    --rose:#ff8fb1;
+    --rose-deep:#e0507e;
+    --cream:#ffeef4;
+    --gold:#f6d9a8;
+  }
+
+  html,body{ height:100%; }
+
+  body{
+    font-family:'Quicksand', sans-serif;
+    background:
+      radial-gradient(circle at 15% 10%, rgba(224,80,126,.35), transparent 45%),
+      radial-gradient(circle at 85% 85%, rgba(150,80,200,.30), transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(255,143,177,.12), transparent 60%),
+      linear-gradient(160deg, #1a0f1c 0%, #2a1226 45%, #170b1c 100%);
+    color:var(--cream);
+    min-height:100vh;
+    overflow-x:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    position:relative;
+  }
+
+  /* ---------- lớp trái tim bay ---------- */
+  .hearts-layer{
+    position:fixed; inset:0;
+    pointer-events:none;
+    overflow:hidden;
+    z-index:0;
+  }
+  .bg-heart{
+    position:absolute;
+    bottom:-60px;
+    animation:floatUp linear forwards;
+    will-change:transform;
+  }
+  @keyframes floatUp{
+    0%{ transform:translateY(0) translateX(0) rotate(0deg) scale(.8); opacity:0; }
+    10%{ opacity:1; }
+    90%{ opacity:1; }
+    100%{ transform:translateY(-115vh) translateX(var(--drift,30px)) rotate(360deg) scale(1.1); opacity:0; }
+  }
+
+  /* ---------- thẻ chính ---------- */
+  .stage{
+    position:relative;
+    z-index:2;
+    width:100%;
+    max-width:680px;
+  }
+
+  .card{
+    background:linear-gradient(160deg, rgba(255,255,255,.09), rgba(255,255,255,.03));
+    border:1px solid rgba(255,180,205,.22);
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+    border-radius:28px;
+    padding:44px 34px;
+    box-shadow:
+      0 30px 70px rgba(0,0,0,.55),
+      inset 0 1px 0 rgba(255,255,255,.14);
+  }
+
+  .screen{ display:none; animation:appear .9s ease both; }
+  .screen.active{ display:block; }
+  @keyframes appear{
+    from{ opacity:0; transform:translateY(22px) scale(.98); }
+    to{ opacity:1; transform:translateY(0) scale(1); }
+  }
+
+  /* ---------- MÀN HÌNH KHOÁ ---------- */
+  #lock .envelope{
+    font-size:58px;
+    text-align:center;
+    display:block;
+    margin-bottom:12px;
+    animation:beat 2.2s ease-in-out infinite;
+  }
+  @keyframes beat{
+    0%,100%{ transform:scale(1); }
+    50%{ transform:scale(1.12); }
+  }
+
+  .script-title{
+    font-family:'Dancing Script', cursive;
+    font-size:clamp(40px, 9vw, 62px);
+    font-weight:700;
+    text-align:center;
+    line-height:1.15;
+    background:linear-gradient(100deg, #ffd7e6, #ff8fb1 45%, #f6d9a8);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    filter:drop-shadow(0 4px 18px rgba(255,143,177,.35));
+  }
+
+  .sub{
+    text-align:center;
+    font-size:14.5px;
+    letter-spacing:.5px;
+    color:rgba(255,238,244,.62);
+    margin:10px 0 30px;
+    font-weight:400;
+  }
+
+  .pw-wrap{ position:relative; margin-bottom:18px; }
+
+  #pw{
+    width:100%;
+    padding:18px 20px;
+    font-family:'Quicksand', sans-serif;
+    font-size:26px;
+    font-weight:600;
+    letter-spacing:14px;
+    text-align:center;
+    text-indent:14px;
+    color:#fff;
+    background:rgba(255,255,255,.07);
+    border:1.5px solid rgba(255,143,177,.35);
+    border-radius:18px;
+    outline:none;
+    transition:.3s;
+  }
+  #pw::placeholder{
+    letter-spacing:6px;
+    text-indent:0;
+    font-size:15px;
+    font-weight:400;
+    color:rgba(255,238,244,.35);
+  }
+  #pw:focus{
+    border-color:var(--rose);
+    background:rgba(255,143,177,.10);
+    box-shadow:0 0 0 4px rgba(255,143,177,.14);
+  }
+
+  .btn{
+    display:block;
+    width:100%;
+    padding:17px;
+    border:none;
+    border-radius:18px;
+    font-family:'Quicksand', sans-serif;
+    font-size:16.5px;
+    font-weight:600;
+    letter-spacing:.4px;
+    color:#2a0c18;
+    background:linear-gradient(100deg, #ffb3c9, #ff8fb1 45%, #f6d9a8);
+    cursor:pointer;
+    box-shadow:0 12px 28px rgba(224,80,126,.38);
+    transition:transform .18s ease, box-shadow .25s ease, filter .25s;
+  }
+  .btn:hover{ transform:translateY(-2px); box-shadow:0 16px 34px rgba(224,80,126,.5); filter:brightness(1.05); }
+  .btn:active{ transform:translateY(0) scale(.985); }
+
+  .hint{
+    text-align:center;
+    margin-top:16px;
+    font-size:12.5px;
+    color:rgba(255,238,244,.42);
+    font-style:italic;
+  }
+
+  .err{
+    text-align:center;
+    font-size:13.5px;
+    color:#ff9db8;
+    height:20px;
+    margin-top:12px;
+    opacity:0;
+    transition:opacity .25s;
+  }
+  .err.show{ opacity:1; }
+
+  .shake{ animation:shake .45s cubic-bezier(.36,.07,.19,.97); }
+  @keyframes shake{
+    10%,90%{ transform:translateX(-3px); }
+    20%,80%{ transform:translateX(5px); }
+    30%,50%,70%{ transform:translateX(-8px); }
+    40%,60%{ transform:translateX(8px); }
+  }
+
+  /* ---------- LÁ THƯ ---------- */
+  .letter-title{
+    font-family:'Dancing Script', cursive;
+    font-size:clamp(32px,7vw,44px);
+    font-weight:700;
+    text-align:center;
+    background:linear-gradient(100deg,#ffd7e6,#ff8fb1 50%,#f6d9a8);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    margin-bottom:6px;
+  }
+  .divider{
+    width:120px; height:1px;
+    margin:14px auto 26px;
+    background:linear-gradient(90deg, transparent, rgba(255,143,177,.8), transparent);
+    position:relative;
+  }
+  .divider::after{
+    content:'❦';
+    position:absolute;
+    left:50%; top:50%;
+    transform:translate(-50%,-50%);
+    font-size:13px;
+    color:var(--rose);
+    background:#241222;
+    padding:0 8px;
+    border-radius:50%;
+  }
+
+  .letter{
+    font-family:'Playfair Display', serif;
+    font-size:16.5px;
+    line-height:1.95;
+    color:rgba(255,238,244,.90);
+    max-height:52vh;
+    overflow-y:auto;
+    padding-right:10px;
+    scrollbar-width:thin;
+    scrollbar-color:rgba(255,143,177,.5) transparent;
+  }
+  .letter::-webkit-scrollbar{ width:5px; }
+  .letter::-webkit-scrollbar-thumb{ background:rgba(255,143,177,.45); border-radius:10px; }
+
+  .letter p{
+    margin-bottom:18px;
+    opacity:0;
+    transform:translateY(14px);
+    animation:lineIn .9s ease forwards;
+  }
+  @keyframes lineIn{ to{ opacity:1; transform:translateY(0); } }
+
+  .letter p:nth-child(1){ animation-delay:.15s; }
+  .letter p:nth-child(2){ animation-delay:.55s; }
+  .letter p:nth-child(3){ animation-delay:.95s; }
+  .letter p:nth-child(4){ animation-delay:1.35s; }
+  .letter p:nth-child(5){ animation-delay:1.75s; }
+  .letter p:nth-child(6){ animation-delay:2.15s; }
+
+  .letter .sign{
+    font-family:'Dancing Script', cursive;
+    font-size:22px;
+    color:var(--rose);
+    text-align:right;
+    margin-top:6px;
+  }
+
+  /* ---------- CÂU HỎI ---------- */
+  .question-box{
+    margin-top:28px;
+    padding-top:26px;
+    border-top:1px dashed rgba(255,143,177,.28);
+    text-align:center;
+    animation:lineIn 1s ease 2.5s forwards;
+    opacity:0;
+  }
+
+  .question{
+    font-family:'Playfair Display', serif;
+    font-size:clamp(20px,4.6vw,26px);
+    font-weight:600;
+    line-height:1.55;
+    background:linear-gradient(100deg,#ffd7e6,#ff8fb1 50%,#f6d9a8);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    margin-bottom:14px;
+    filter:drop-shadow(0 3px 14px rgba(255,143,177,.3));
+  }
+
+  .promise{
+    font-family:'Playfair Display', serif;
+    font-style:italic;
+    font-size:14.5px;
+    line-height:1.85;
+    color:rgba(255,238,244,.72);
+    max-width:460px;
+    margin:0 auto 26px;
+  }
+
+  .btn-row{
+    display:flex;
+    gap:12px;
+    justify-content:center;
+    flex-wrap:wrap;
+  }
+
+  .btn-yes{
+    padding:15px 30px;
+    border:none;
+    border-radius:50px;
+    font-family:'Quicksand', sans-serif;
+    font-size:16px;
+    font-weight:600;
+    color:#2a0c18;
+    background:linear-gradient(100deg,#ffb3c9,#ff8fb1 45%,#f6d9a8);
+    cursor:pointer;
+    box-shadow:0 12px 28px rgba(224,80,126,.42);
+    transition:.22s;
+    animation:pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{ box-shadow:0 12px 28px rgba(224,80,126,.42); }
+    50%{ box-shadow:0 12px 38px rgba(255,143,177,.72); }
+  }
+  .btn-yes:hover{ transform:translateY(-3px) scale(1.04); }
+
+  /* Nút "em còn ngại" */
+  .btn-shy{
+    padding:15px 24px;
+    border:1.5px solid rgba(255,180,205,.55);
+    border-radius:50px;
+    font-family:'Quicksand', sans-serif;
+    font-size:14px;
+    font-weight:500;
+    color:#ffd7e6;
+    background:rgba(255,143,177,.10);
+    cursor:pointer;
+    transition:.25s;
+  }
+  .btn-shy:hover{
+    background:rgba(255,143,177,.22);
+    transform:translateY(-2px);
+    box-shadow:0 10px 24px rgba(255,143,177,.28);
+  }
+
+  .btn-no{
+    padding:15px 22px;
+    border:1.5px solid rgba(255,238,244,.25);
+    border-radius:50px;
+    font-family:'Quicksand', sans-serif;
+    font-size:13.5px;
+    font-weight:500;
+    color:rgba(255,238,244,.65);
+    background:rgba(255,255,255,.05);
+    cursor:pointer;
+    transition:transform .25s ease, font-size .25s ease, opacity .4s;
+  }
+
+  /* ---------- MÀN HÌNH ĐỒNG Ý / TÌM HIỂU ---------- */
+  #success, #shy{ text-align:center; padding:20px 0; }
+  .big-heart{
+    font-size:74px;
+    display:block;
+    margin-bottom:18px;
+    animation:beat 1.5s ease-in-out infinite;
+  }
+  #success h2, #shy h2{
+    font-family:'Dancing Script', cursive;
+    font-size:clamp(32px,7.5vw,46px);
+    font-weight:700;
+    background:linear-gradient(100deg,#ffd7e6,#ff8fb1 50%,#f6d9a8);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    margin-bottom:16px;
+  }
+  #success p, #shy p{
+    font-family:'Playfair Display', serif;
+    font-size:16px;
+    line-height:1.9;
+    color:rgba(255,238,244,.82);
+    max-width:440px;
+    margin:0 auto 10px;
+  }
+  #success .small, #shy .small{
+    font-family:'Quicksand', sans-serif;
+    font-size:13px;
+    color:rgba(255,238,244,.45);
+    margin-top:22px;
+    letter-spacing:.5px;
+  }
+
+  /* ---------- nút nhạc ---------- */
+  .music-btn{
+    position:fixed;
+    top:18px; right:18px;
+    z-index:20;
+    width:48px; height:48px;
+    border-radius:50%;
+    border:1px solid rgba(255,143,177,.4);
+    background:rgba(40,18,36,.72);
+    backdrop-filter:blur(10px);
+    color:var(--rose);
+    font-size:19px;
+    cursor:pointer;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    transition:.25s;
+  }
+  .music-btn.show{ display:flex; }
+  .music-btn:hover{ background:rgba(255,143,177,.2); transform:scale(1.08); }
+  .music-btn.playing{ animation:spinDisc 6s linear infinite; }
+  @keyframes spinDisc{ to{ transform:rotate(360deg); } }
+
+  /* confetti hearts */
+  .pop-heart{
+    position:fixed;
+    z-index:30;
+    pointer-events:none;
+    font-size:24px;
+    animation:popOut 1.6s ease-out forwards;
+  }
+  @keyframes popOut{
+    0%{ transform:translate(0,0) scale(.4); opacity:1; }
+    100%{ transform:translate(var(--dx), var(--dy)) scale(1.3) rotate(var(--rot)); opacity:0; }
+  }
+
+  @media(max-width:480px){
+    .card{ padding:32px 22px; border-radius:24px; }
+    .letter{ max-height:46vh; font-size:15.5px; }
+    #pw{ font-size:22px; letter-spacing:10px; }
+    .btn-yes{ padding:14px 26px; font-size:15px; }
+    .btn-shy{ padding:14px 20px; font-size:13px; }
+    .btn-no{ padding:14px 18px; font-size:12.5px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hearts-layer" id="heartsLayer"></div>
+
+<button class="music-btn" id="musicBtn" title="Bật/tắt nhạc">🎵</button>
+
+<div class="stage">
+
+  <!-- ============ MÀN HÌNH MẬT KHẨU ============ -->
+  <section class="card screen active" id="lock">
+    <span class="envelope">💌</span>
+    <h1 class="script-title">Gửi beiu</h1>
+    <p class="sub">Có một lá thư nhỏ đang chờ em mở…</p>
+
+    <div class="pw-wrap">
+      <input id="pw" type="password" inputmode="numeric" maxlength="4" placeholder="Nhập mật khẩu" autocomplete="off">
+    </div>
+
+    <button class="btn" id="unlockBtn">Mở thư 💗</button>
+    <div class="err" id="err"></div>
+    <p class="hint">Gợi ý: ngày đặc biệt của hai đứa mình 🤍</p>
+  </section>
+
+  <!-- ============ LÁ THƯ ============ -->
+  <section class="card screen" id="letter">
+    <h1 class="letter-title">Gửi beiu của anh</h1>
+    <div class="divider"></div>
+
+    <div class="letter">
+      <p>Anh không biết từ bao giờ, việc mỗi sáng mở điện thoại chờ một tin nhắn của em đã trở thành thói quen. Anh cũng không biết từ bao giờ, nụ cười của em lại có thể khiến một ngày mệt mỏi của anh bỗng chốc dịu lại.</p>
+
+      <p>Em đến như một cơn gió nhẹ giữa những ngày anh tưởng mình đã quen với sự lặng lẽ. Em chẳng cần làm gì cả — chỉ cần ở đó thôi, là thế giới này bỗng đáng yêu hơn rất nhiều.</p>
+
+      <p>Anh biết quá khứ của em không hề dễ dàng. Anh biết có những vết thương mà thời gian cũng chưa thể xoá mờ. Nên anh không hứa sẽ làm em quên đi tất cả — anh chỉ hứa sẽ ở đây, kiên nhẫn, dịu dàng, và không bao giờ để em phải tự mình chịu đựng thêm một lần nào nữa.</p>
+
+      <p>Anh không phải người hoàn hảo. Nhưng anh hứa sẽ học cách yêu em đúng cách, mỗi ngày một tốt hơn.</p>
+
+      <p class="sign">— Anh của em 💕</p>
+    </div>
+
+    <div class="question-box">
+      <p class="question">Em đồng ý làm người yêu anh không?</p>
+      <p class="promise">Anh hứa sẽ bảo vệ em, thương em, chăm sóc em, yêu em, bù đắp những tổn thương từ quá khứ của em — và cùng em đi qua mọi mùa của cuộc đời.</p>
+
+      <div class="btn-row">
+        <button class="btn-yes" id="yesBtn">Em đồng ý 💗</button>
+        <button class="btn-shy" id="shyBtn">Em còn ngại, mình tìm hiểu trước nhé 🥺</button>
+        <button class="btn-no" id="noBtn">Để em suy nghĩ…</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ EM CÒN NGẠI ============ -->
+  <section class="card screen" id="shy">
+    <span class="big-heart">🌷</span>
+    <h2>Không sao đâu em</h2>
+    <p>Vậy mình cứ từ từ thôi. Anh sẽ không vội vàng, cũng không ép em phải nói "có" khi lòng em còn chưa yên.</p>
+    <p>Mình bắt đầu bằng những buổi nói chuyện thật dài, những lần đầu tiên gặp nhau, những tin nhắn chúc ngủ ngon mỗi tối, và những ngày em mệt — anh vẫn ở đây.</p>
+    <p>Anh muốn em hiểu anh trước khi tin anh. Và anh sẵn sàng chờ.</p>
+    <p style="font-family:'Dancing Script', cursive; font-size:24px; color:#ff8fb1; margin-top:18px;">Em đồng ý cho anh được tìm hiểu em chứ? 🤍</p>
+
+    <div class="btn-row" style="margin-top:24px;">
+      <button class="btn-yes" id="shyAgreeBtn">Dạ, em đồng ý 💗</button>
+    </div>
+    <p class="small">— Anh sẽ đi chậm, nhưng sẽ đi cùng em.</p>
+  </section>
+
+  <!-- ============ ĐỒNG Ý ============ -->
+  <section class="card screen" id="success">
+    <span class="big-heart">💖</span>
+    <h2>Anh biết mà!</h2>
+    <p>Cảm ơn em đã cho anh cơ hội được ở bên em.</p>
+    <p>Từ hôm nay, mọi buồn vui của em — anh xin nhận một nửa. 🤍</p>
+    <p class="small">Anh thương em, nhiều hơn những gì anh có thể viết ra.</p>
+  </section>
+
+</div>
+
+<script>
+/* =========================================================
+   1. TRÁI TIM BAY NỀN
+   ========================================================= */
+const heartsLayer = document.getElementById('heartsLayer');
+const EMOJIS = ['💗','🤍','💕','🌸','✨','💖','🩷'];
+
+function spawnHeart(){
+  const h = document.createElement('div');
+  h.className = 'bg-heart';
+  h.textContent = EMOJIS[Math.floor(Math.random()*EMOJIS.length)];
+  h.style.left = Math.random()*100 + 'vw';
+  h.style.fontSize = (12 + Math.random()*22) + 'px';
+  h.style.opacity = 0.12 + Math.random()*0.35;
+  h.style.setProperty('--drift', (Math.random()*160 - 80) + 'px');
+  const dur = 9 + Math.random()*9;
+  h.style.animationDuration = dur + 's';
+  heartsLayer.appendChild(h);
+  setTimeout(()=>h.remove(), dur*1000 + 500);
+}
+setInterval(spawnHeart, 650);
+for(let i=0;i<8;i++) setTimeout(spawnHeart, i*200);
+
+/* =========================================================
+   2. NHẠC NỀN
+   ========================================================= */
+let actx = null, master = null, delayNode = null, fbNode = null;
+let musicOn = false, schedTimer = null, nextNoteTime = 0, step = 0;
+
+const SCALE = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25];
+const BASS  = [130.81, 110.00, 174.61, 130.81];
+const BEAT  = 0.62;
+
+function initAudio(){
+  if(actx) return;
+  const AC = window.AudioContext || window.webkitAudioContext;
+  actx = new AC();
+
+  master = actx.createGain();
+  master.gain.value = 0;
+  master.connect(actx.destination);
+
+  delayNode = actx.createDelay(1.2);
+  delayNode.delayTime.value = 0.42;
+  fbNode = actx.createGain();
+  fbNode.gain.value = 0.30;
+  delayNode.connect(fbNode);
+  fbNode.connect(delayNode);
+
+  const wet = actx.createGain();
+  wet.gain.value = 0.32;
+  delayNode.connect(wet);
+  wet.connect(master);
+}
+
+function playTone(freq, time, dur, vol, type){
+  const osc = actx.createOscillator();
+  const gain = actx.createGain();
+  osc.type = type || 'sine';
+  osc.frequency.value = freq;
+
+  gain.gain.setValueAtTime(0.0001, time);
+  gain.gain.linearRampToValueAtTime(vol, time + 0.06);
+  gain.gain.exponentialRampToValueAtTime(0.0001, time + dur);
+
+  osc.connect(gain);
+  gain.connect(master);
+  gain.connect(delayNode);
+
+  osc.start(time);
+  osc.stop(time + dur + 0.15);
+}
+
+function schedule(){
+  while(nextNoteTime < actx.currentTime + 0.6){
+    const t = nextNoteTime;
+
+    if(step % 2 === 0 || Math.random() > 0.45){
+      const idx = Math.floor(Math.random() * SCALE.length);
+      const freq = SCALE[idx];
+      playTone(freq, t, 2.6, 0.085, 'sine');
+      if(Math.random() > 0.55){
+        playTone(freq * 1.5, t + 0.02, 2.0, 0.030, 'triangle');
+      }
+    }
+
+    if(step % 4 === 0){
+      const b = BASS[Math.floor(step / 4) % BASS.length];
+      playTone(b, t, 3.4, 0.055, 'sine');
+    }
+
+    nextNoteTime += BEAT;
+    step++;
+  }
+}
+
+function startMusic(){
+  initAudio();
+  if(actx.state === 'suspended') actx.resume();
+  if(musicOn) return;
+  musicOn = true;
+  nextNoteTime = actx.currentTime + 0.15;
+  master.gain.cancelScheduledValues(actx.currentTime);
+  master.gain.setValueAtTime(master.gain.value, actx.currentTime);
+  master.gain.linearRampToValueAtTime(0.5, actx.currentTime + 2.5);
+  schedule();
+  schedTimer = setInterval(schedule, 220);
+  musicBtn.classList.add('playing');
+}
+
+function stopMusic(){
+  if(!musicOn || !actx) return;
+  musicOn = false;
+  clearInterval(schedTimer);
+  master.gain.cancelScheduledValues(actx.currentTime);
+  master.gain.setValueAtTime(master.gain.value, actx.currentTime);
+  master.gain.linearRampToValueAtTime(0.0001, actx.currentTime + 0.8);
+  musicBtn.classList.remove('playing');
+}
+
+const musicBtn = document.getElementById('musicBtn');
+musicBtn.addEventListener('click', () => {
+  musicOn ? stopMusic() : startMusic();
+});
+
+/* =========================================================
+   3. MỞ KHOÁ
+   ========================================================= */
+const PASSWORD = '0811';
+
+const lockScreen = document.getElementById('lock');
+const letterScreen = document.getElementById('letter');
+const successScreen = document.getElementById('success');
+const shyScreen = document.getElementById('shy');
+const pwInput = document.getElementById('pw');
+const errEl = document.getElementById('err');
+const unlockBtn = document.getElementById('unlockBtn');
+
+function tryUnlock(){
+  if(pwInput.value.trim() === PASSWORD){
+    errEl.classList.remove('show');
+    lockScreen.classList.remove('active');
+    letterScreen.classList.add('active');
+
+    musicBtn.classList.add('show');
+    startMusic();
+
+    letterScreen.querySelectorAll('.letter p').forEach(p=>{
+      p.style.animation = 'none';
+      void p.offsetWidth;
+      p.style.animation = '';
+    });
+    const box = letterScreen.querySelector('.letter');
+    if(box) box.scrollTop = 0;
+
+  } else {
+    errEl.textContent = pwInput.value.trim() === ''
+      ? 'Em chưa nhập gì mà 🥺'
+      : 'Sai mật khẩu rồi beiu ơi 🥺 thử lại nhé!';
+    errEl.classList.add('show');
+
+    const card = document.getElementById('lock');
+    card.classList.remove('shake');
+    void card.offsetWidth;
+    card.classList.add('shake');
+
+    pwInput.value = '';
+    pwInput.focus();
+  }
+}
+
+unlockBtn.addEventListener('click', tryUnlock);
+pwInput.addEventListener('keydown', e => {
+  if(e.key === 'Enter') tryUnlock();
+});
+setTimeout(()=>pwInput.focus(), 500);
+
+/* =========================================================
+   4. CÁC NÚT LỰA CHỌN
+   ========================================================= */
+const yesBtn  = document.getElementById('yesBtn');
+const shyBtn  = document.getElementById('shyBtn');
+const noBtn   = document.getElementById('noBtn');
+const shyAgreeBtn = document.getElementById('shyAgreeBtn');
+
+let dodgeCount = 0;
+const NO_LABELS = [
+  'Để em suy nghĩ…',
+  'Từ từ đã…',
+  'Em chưa chắc đâu…',
+  'Khó quá à…',
+  'Năn nỉ đó 🥺'
+];
+
+function dodge(){
+  dodgeCount++;
+  if(dodgeCount >= 5){
+    noBtn.textContent = 'Thôi được, em đồng ý 🥺';
+    noBtn.onclick = showSuccess;
+    noBtn.style.borderColor = 'rgba(255,143,177,.7)';
+    noBtn.style.color = '#ffd7e6';
+    return;
+  }
+  noBtn.textContent = NO_LABELS[dodgeCount];
+  const dx = (Math.random() * 160 - 80);
+  const dy = (Math.random() * 100 - 50);
+  noBtn.style.transform = `translate(${dx}px, ${dy}px) scale(${1 - dodgeCount*0.06})`;
+}
+
+noBtn.addEventListener('click', dodge);
+noBtn.addEventListener('mouseenter', () => {
+  if(dodgeCount < 5){
+    const dx = (Math.random() * 160 - 80);
+    const dy = (Math.random() * 100 - 50);
+    noBtn.style.transform = `translate(${dx}px, ${dy}px)`;
+  }
+});
+
+yesBtn.addEventListener('click', showSuccess);
+
+/* Nút "em còn ngại" -> màn hình tìm hiểu */
+shyBtn.addEventListener('click', () => {
+  letterScreen.classList.remove('active');
+  shyScreen.classList.add('active');
+  burstHearts();
+});
+
+/* Đồng ý tìm hiểu -> màn hình chúc mừng */
+shyAgreeBtn.addEventListener('click', showSuccess);
+
+function showSuccess(){
+  letterScreen.classList.remove('active');
+  shyScreen.classList.remove('active');
+  successScreen.classList.add('active');
+  burstHearts();
+  setTimeout(burstHearts, 500);
+  setTimeout(burstHearts, 1100);
+}
+
+/* Bắn tim tung toé */
+function burstHearts(){
+  for(let i=0;i<18;i++){
+    const h = document.createElement('div');
+    h.className = 'pop-heart';
+    h.textContent = ['💖','💗','💕','🤍','✨','🌸'][Math.floor(Math.random()*6)];
+
+    const rect = document.querySelector('.screen.active').getBoundingClientRect();
+    const cx = rect.left + rect.width/2;
+    const cy = rect.top + rect.height/2;
+
+    h.style.left = cx + 'px';
+    h.style.top  = cy + 'px';
+    h.style.setProperty('--dx', (Math.random()*440 - 220) + 'px');
+    h.style.setProperty('--dy', (Math.random()*-380 - 60) + 'px');
+    h.style.setProperty('--rot', (Math.random()*720 - 360) + 'deg');
+    h.style.fontSize = (16 + Math.random()*22) + 'px';
+    h.style.animationDelay = (Math.random()*0.35) + 's';
+
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(), 2300);
+  }
+}
+</script>
+</body>
+</html>
